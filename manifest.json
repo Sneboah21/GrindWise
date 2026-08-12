@@ -4,8 +4,8 @@
   "version": "2.0.0",
   "description": "AI-powered coding coach with adaptive hints and GitHub sync.",
   "icons": {
-    "16":  "icons/icon16.png",
-    "48":  "icons/icon48.png",
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
   "permissions": ["activeTab", "storage", "scripting", "identity"],
@@ -27,11 +27,11 @@
     "https://api.groq.com/*"
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_title": "Hint Engine",
     "default_icon": {
-      "16":  "icons/icon16.png",
-      "48":  "icons/icon48.png",
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     }
   },
@@ -48,12 +48,35 @@
         "https://www.hackerrank.com/challenges/*",
         "https://www.interviewbit.com/problems/*"
       ],
-      "js": ["content.js"],
-      "css": ["style.css"],
+      "js": ["content/content.js"],
+      "css": ["styles/panel.css"],
       "run_at": "document_idle"
     }
   ],
   "background": {
-    "service_worker": "background.js"
-  }
+    "service_worker": "background/background.js",
+    "type": "module"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "core/*.js",
+        "github/*.js",
+        "platforms/*.js",
+        "storage/*.js",
+        "ui/*.js",
+        "utils/*.js"
+      ],
+      "matches": [
+        "https://leetcode.com/*",
+        "https://codeforces.com/*",
+        "https://takeuforward.org/*",
+        "https://www.geeksforgeeks.org/*",
+        "https://www.codechef.com/*",
+        "https://atcoder.jp/*",
+        "https://www.hackerrank.com/*",
+        "https://www.interviewbit.com/*"
+      ]
+    }
+  ]
 }

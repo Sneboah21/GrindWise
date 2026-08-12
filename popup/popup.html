@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GrindWise</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <main class="popup-shell">
+    <header class="header">
+      <div class="logo" aria-hidden="true">💡</div>
+
+      <div class="header-text">
+        <h1>GrindWise</h1>
+        <p>AI Coding Coach</p>
+      </div>
+
+      <button
+        id="helpBtn"
+        class="icon-btn"
+        type="button"
+        aria-label="Open setup guide"
+      >
+        Need help?
+      </button>
+    </header>
+
+    <section class="analytics-section" aria-labelledby="analyticsTitle">
+      <div class="analytics-header">
+        <div>
+          <p class="section-eyebrow">Learning Analytics</p>
+          <h2 id="analyticsTitle">Your progress</h2>
+        </div>
+
+        <button
+          id="refreshAnalyticsBtn"
+          class="refresh-btn"
+          type="button"
+          aria-label="Refresh analytics"
+          title="Refresh analytics"
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" />
+            <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" />
+            <path d="M3 16v-4h4" />
+            <path d="M21 8V4h-4" />
+          </svg>
+        </button>
+      </div>
+
+      <p id="analyticsSubtitle" class="analytics-subtitle">
+        Loading your learning history…
+      </p>
+
+      <div id="analyticsLoadingState" class="analytics-loading" aria-live="polite">
+        <div class="skeleton skeleton-title"></div>
+        <div class="kpi-grid">
+          <div class="metric-card skeleton-card"></div>
+          <div class="metric-card skeleton-card"></div>
+          <div class="metric-card skeleton-card"></div>
+          <div class="metric-card skeleton-card"></div>
+        </div>
+      </div>
+
+      <div id="analyticsEmptyState" class="analytics-empty" hidden>
+        <div class="analytics-empty-icon" aria-hidden="true">📈</div>
+        <h3>No sessions yet</h3>
+        <p>
+          Use GrindWise on a coding problem and complete it to start building
+          your learning analytics.
+        </p>
+      </div>
+
+      <div id="analyticsErrorState" class="analytics-error" hidden>
+        <div class="analytics-error-icon" aria-hidden="true">!</div>
+        <div>
+          <h3>Could not load analytics</h3>
+          <p id="analyticsErrorMessage">
+            Please refresh and try again.
+          </p>
+        </div>
+      </div>
+
+      <div id="analyticsDashboard" hidden>
+        <div id="analyticsKpiGrid" class="kpi-grid"></div>
+
+        <section class="mode-usage-card" aria-labelledby="modeUsageTitle">
+          <div class="mode-usage-heading">
+            <div>
+              <p class="section-eyebrow">Learning style</p>
+              <h3 id="modeUsageTitle">Mode usage</h3>
+            </div>
+            <span id="modeUsageTotal" class="mode-total">0 sessions</span>
+          </div>
+
+          <div id="modeUsageList" class="mode-usage-list"></div>
+        </section>
+
+        <div class="analytics-actions">
+          <button
+            id="clearAnalyticsBtn"
+            class="clear-history-btn"
+            type="button"
+          >
+            Clear learning history
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section">
+      <div class="section-title">AI Provider</div>
+
+      <div class="field">
+        <label for="providerSelect">Provider</label>
+        <select id="providerSelect">
+          <option value="groq">Groq (Recommended)</option>
+          <option value="gemini">Gemini (Recommended)</option>
+          <option value="openai">OpenAI</option>
+          <option value="claude">Claude</option>
+          <option value="cohere">Cohere</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label id="apiKeyLabel" for="apiKeyInput">API Key</label>
+
+        <div class="input-wrapper">
+          <input
+            type="password"
+            id="apiKeyInput"
+            autocomplete="off"
+            spellcheck="false"
+          />
+
+          <button
+            class="toggle-vis"
+            id="toggleVis"
+            type="button"
+            aria-label="Show API key"
+          >
+            <svg
+              id="eyeOn"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+
+            <svg
+              id="eyeOff"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              style="display: none"
+              aria-hidden="true"
+            >
+              <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+              <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+              <line x1="1" y1="1" x2="23" y2="23" />
+            </svg>
+          </button>
+        </div>
+
+        <p class="help">
+          Get your key at
+          <a id="apiKeyLink" href="#" target="_blank" rel="noopener noreferrer">—</a>
+        </p>
+      </div>
+
+      <button class="btn-primary" id="saveBtn" type="button">
+        Save API Key
+      </button>
+
+      <div class="confirm" id="saveConfirm" aria-live="polite">
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          aria-hidden="true"
+        >
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        Saved!
+      </div>
+    </section>
+
+    <section class="section learning-mode-section">
+      <div class="section-title">Learning Mode</div>
+
+      <div class="field">
+        <label for="learningModeSelect">Mode</label>
+
+        <select id="learningModeSelect">
+          <option value="coaching">Coaching</option>
+          <option value="socratic">Socratic</option>
+          <option value="direct">Direct</option>
+        </select>
+
+        <p class="help" id="learningModeHelp">
+          Balanced guidance that encourages independent thinking.
+        </p>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section class="section">
+      <div class="section-title">GitHub</div>
+
+      <div id="ghNotConnected">
+        <div class="field github-client-field">
+          <label for="githubClientId">OAuth App Client ID</label>
+          <input
+            type="text"
+            id="githubClientId"
+            placeholder="Ov23li••••••••••••••••"
+            autocomplete="off"
+          />
+        </div>
+
+        <div class="callback-field">
+          <label for="redirectUriDisplay">Callback URL (copy into OAuth App)</label>
+
+          <div class="uri-box">
+            <code id="redirectUriDisplay">Loading…</code>
+            <button class="copy-btn" id="copyUriBtn" type="button">Copy</button>
+          </div>
+        </div>
+
+        <button class="btn-ghost" id="githubConnectBtn" type="button">
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"
+            />
+          </svg>
+          Connect GitHub
+        </button>
+
+        <p class="help">
+          <a
+            href="https://github.com/settings/developers"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Create a GitHub OAuth App ↗
+          </a>
+          · paste your Client ID above.
+        </p>
+      </div>
+
+      <div id="ghConnected" class="gh-connected" style="display: none">
+        <div class="gh-card">
+          <img class="gh-avatar" id="ghAvatar" src="" alt="GitHub avatar" />
+
+          <div class="gh-info">
+            <div class="gh-name" id="ghUsername">—</div>
+            <span class="gh-badge">Connected</span>
+          </div>
+
+          <button
+            class="disconnect-btn"
+            id="githubDisconnectBtn"
+            type="button"
+          >
+            Disconnect
+          </button>
+        </div>
+
+        <div class="field">
+          <label for="repoSelect">Save Solutions To</label>
+          <select id="repoSelect">
+            <option value="">— select a repo —</option>
+          </select>
+        </div>
+
+        <button class="btn-ghost" id="saveRepoBtn" type="button">
+          Save Repository
+        </button>
+
+        <div class="confirm" id="repoConfirm" aria-live="polite">
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            aria-hidden="true"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Repository saved!
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Your keys and tokens are stored locally and never shared.
+    </footer>
+
+    <div class="footer-grind">KEEP UP THE GRIND</div>
+  </main>
+
+  <div class="help-modal" id="helpModal" aria-hidden="true">
+    <div class="help-header">
+      <h2>Setup Guide</h2>
+      <button
+        id="closeHelpBtn"
+        class="icon-btn"
+        type="button"
+        aria-label="Close setup guide"
+      >
+        Close
+      </button>
+    </div>
+
+    <div class="help-body">
+      <h3>Step 1 — Get a Free AI Key</h3>
+      <p>Choose a provider below and create an API key:</p>
+
+      <ul>
+        <li>
+          <strong>Groq</strong><br />
+          <a
+            href="https://console.groq.com/keys"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            console.groq.com
+          </a>
+          → Sign up → Create API Key → Copy it.
+        </li>
+
+        <li>
+          <strong>Gemini</strong><br />
+          <a
+            href="https://aistudio.google.com/app/apikey"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            aistudio.google.com/app/apikey
+          </a>
+          → Sign in → Create API Key → Copy it.
+        </li>
+      </ul>
+
+      <p>
+        Paste the key in <strong>AI Provider → API Key</strong>, then click
+        <strong>Save API Key</strong>.
+      </p>
+
+      <h3>Step 2 — Connect GitHub</h3>
+      <p>
+        GitHub connection lets GrindWise save accepted solutions into one of
+        your repositories.
+      </p>
+
+      <ol>
+        <li>
+          Go to
+          <a
+            href="https://github.com/settings/developers"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GitHub Developer Settings
+          </a>.
+        </li>
+        <li>Open <strong>OAuth Apps</strong> and choose <strong>New OAuth App</strong>.</li>
+        <li>Use the callback URL shown in the GitHub section.</li>
+        <li>Copy the Client ID and Client Secret.</li>
+        <li>Paste the Client ID, then select <strong>Connect GitHub</strong>.</li>
+      </ol>
+
+      <h3>Step 3 — Pick a Repository</h3>
+      <p>
+        After connecting, select a repository and click
+        <strong>Save Repository</strong>.
+      </p>
+
+      <p>
+        Accepted solutions can then be saved like:
+        <code>solutions/leetcode/two-sum.md</code>.
+      </p>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
