@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="icons/icon128.png" alt="GrindWise Logo" width="128" height="128">
+  <!-- <img src="icons/icon128.png" alt="GrindWise Logo" width="128" height="128"> -->
   <h1>GrindWise</h1>
   <p><strong>AI-powered interview coaching & GitHub auto-sync for your coding journey.</strong></p>
 </div>
